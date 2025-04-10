@@ -54,6 +54,17 @@ describe('Login e acesso ao Cadastro de Pedido', () => {
     // Verifica a existência do título ou conteúdo da tela
     cy.contains('Cadastro').should('exist')
 
+    // Aguarda o campo de pessoa ficar visível e digita 1682
+cy.get('input[aria-autocomplete="list"]', { timeout: 10000 })
+  .should('be.visible')
+  .clear({ force: true })
+  .type('1682', { force: true })
+
+// Aguarda a lista de sugestões e seleciona o primeiro item
+cy.get('span.autocomplete-item-list', { timeout: 10000 })
+  .should('be.visible')
+  .first()
+  .click({ force: true })
 
   })
 })
