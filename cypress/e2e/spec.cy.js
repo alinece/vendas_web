@@ -1,6 +1,6 @@
 describe('Login e acesso ao Cadastro de Pedido', () => {
   it('Deve logar e acessar a tela de cadastro de pedido', () => {
-    cy.visit('http://127.0.0.1:8092/#/login')
+    cy.visit('http://127.0.0.1:8091/#/login')
 
     // Intercepta os endpoints que estavam retornando 404
     cy.intercept('GET', '/vendasweb-api/v2/customizacoes/PEDIDO_GRID', {
@@ -53,5 +53,7 @@ describe('Login e acesso ao Cadastro de Pedido', () => {
 
     // Verifica a existência do título ou conteúdo da tela
     cy.contains('Cadastro').should('exist')
+
+
   })
 })
