@@ -2,13 +2,15 @@ const { defineConfig } = require('cypress');
 
 module.exports = defineConfig({
   e2e: {
-    // outros configs aqui...
+    setupNodeEvents(on, config) {
+      // Implement node event listeners if needed
+    },
   },
   reporter: 'mochawesome',
   reporterOptions: {
     reportDir: 'cypress/reports',
     overwrite: false,
-    html: false,
-    json: true
+    html: true,    // Gerar HTML
+    json: true,    // Gerar JSON
   }
 });

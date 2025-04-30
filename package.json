@@ -1,17 +1,19 @@
 {
   "name": "vendas_web",
   "version": "1.0.0",
-  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "cypress run",
+    "report:merge": "npx mochawesome-merge \"cypress/reports/*.json\" > cypress/reports/report.json",
+    "report:generate": "npx marge cypress/reports/report.json --reportDir docs",
+    "report:open": "start docs/report.html",
+    "test:report": "npm run test && npm run report:merge && npm run report:generate && npm run report:open",
+    "send:summary": "node send-summary.js"
   },
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "devDependencies": {
     "cypress": "^14.2.1",
     "mochawesome": "^7.1.3",
     "mochawesome-merge": "^5.0.0",
-    "mochawesome-report-generator": "^6.2.0"
+    "mochawesome-report-generator": "^6.2.0",
+    "axios": "^1.3.5"
   }
 }

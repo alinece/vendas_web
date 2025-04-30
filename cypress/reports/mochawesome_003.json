@@ -1,0 +1,105 @@
+{
+  "stats": {
+    "suites": 1,
+    "tests": 1,
+    "passes": 1,
+    "pending": 0,
+    "failures": 0,
+    "start": "2025-04-30T15:40:53.586Z",
+    "end": "2025-04-30T15:41:42.727Z",
+    "duration": 49141,
+    "testsRegistered": 1,
+    "passPercent": 100,
+    "pendingPercent": 0,
+    "other": 0,
+    "hasOther": false,
+    "skipped": 0,
+    "hasSkipped": false
+  },
+  "results": [
+    {
+      "uuid": "c0e33b95-d92d-448b-a01c-7f54da9986fa",
+      "title": "",
+      "fullFile": "cypress\\e2e\\spec.cy.js",
+      "file": "cypress\\e2e\\spec.cy.js",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "ad5a0046-104e-42ee-a256-a78d07021f48",
+          "title": "Login e acesso ao Cadastro de Pedido",
+          "fullFile": "",
+          "file": "",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "Deve logar e acessar a tela de cadastro de pedido",
+              "fullTitle": "Login e acesso ao Cadastro de Pedido Deve logar e acessar a tela de cadastro de pedido",
+              "timedOut": null,
+              "duration": 47490,
+              "state": "passed",
+              "speed": "slow",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.visit('http://127.0.0.1:8091/#/login');\n// Intercepta os endpoints que estavam retornando 404\ncy.intercept('GET', '/vendasweb-api/v2/customizacoes/PEDIDO_GRID', {\n  statusCode: 200,\n  body: {}\n}).as('pedidoGrid');\ncy.intercept('GET', '/vendasweb-api/v2/customizacoes/ITENS_GRID', {\n  statusCode: 200,\n  body: {}\n}).as('itensGrid');\ncy.intercept('GET', '/vendasweb-api/v2/customizacoes/PRECO_CUSTOM', {\n  statusCode: 200,\n  body: {}\n}).as('precoCustom');\n// Login\ncy.get('input[name=\"usuario\"]').type('admin');\ncy.get('input[name=\"senha\"]').type('123');\ncy.get('button.login100-form-btn').should('not.be.disabled').click();\ncy.url().should('not.include', '/login');\n// Abre o menu lateral (ícone hambúrguer)\ncy.get('i.icon-menu').filter(':visible').first().click();\n// Clica no 3º botão do menu lateral (índice 2) - \"Pedidos\"\ncy.get('div.menu-ripple').eq(2).click({\n  force: true\n});\n// Aguarda o submenu \"Cadastro\" aparecer e clica\ncy.get('a[href=\"#/pedidos/cadastro\"]', {\n  timeout: 10000\n}).should('have.css', 'visibility', 'visible').click({\n  force: true\n});\n// Confirma que está na tela de cadastro\ncy.url().should('include', '/pedidos/cadastro');\n// Aguarda as requisições interceptadas\ncy.wait('@pedidoGrid');\ncy.wait('@itensGrid');\ncy.wait('@precoCustom');\n// Verifica a existência do título ou conteúdo da tela\ncy.contains('Cadastro').should('exist');\n// Localiza o campo \"Pessoa\" dentro do p-autocomplete\ncy.get('p-autocomplete[formcontrolname=\"pessoaDoc\"] input.p-autocomplete-input', {\n  timeout: 10000\n}).should('be.visible').click({\n  force: true\n}).clear({\n  force: true\n}).type('1682', {\n  force: true\n});\n// Aguarda e seleciona a primeira sugestão da lista\ncy.get('span.autocomplete-item-list', {\n  timeout: 10000\n}).should('be.visible').first().click({\n  force: true\n});\n// Preenche o campo \"Configuração do pedido\" com a opção de código 1\ncy.get('button.p-autocomplete-dropdown', {\n  timeout: 10000\n}).first().should('be.visible').click({\n  force: true\n});\ncy.get('span.autocomplete-item-list', {\n  timeout: 10000\n}).contains(/^1\\b/).click({\n  force: true\n});\n// Avançar para a tela de Campos Personalizados\ncy.contains('button', 'Avançar') // Encontrando o botão \"Avançar\"\n.should('be.visible') // Garantir que o botão está visível\n.click({\n  force: true\n}); // Forçar o clique no botão\n// Aguarda a tela de \"Campos Personalizados\" carregar\ncy.contains('Campos Personalizados', {\n  timeout: 10000\n}).should('exist');\n// Espera um pouco extra para garantir que a transição visual termine\ncy.wait(1000);\n// Avançar para a Tela de Itens    \ncy.get('button.btn.btn-secondary.m-l-10.btn-square.ripple.light') // Localiza o botão pelo seletor\n.contains('Avançar') // Verifica se o botão contém o texto 'Avançar'\n.should('be.visible') // Garante que o botão esteja visível\n.click({\n  force: true\n}); // Força o clique no botão\n//Tela de Itens\n// Selecionar o Tipo de Frete\n// Aguarda a tela de \"Itens\" carregar\ncy.contains('Itens', {\n  timeout: 10000\n}).should('exist');\n// Espera extra para garantir que a transição visual da tela tenha terminado\ncy.wait(1000);\n// Clica no botão do dropdown de Tipo de Frete\n// Encontra o label \"Frete\" e depois o botão dentro do mesmo container\ncy.contains('Frete').parent() // Sobe para o container do dropdown\n.find('.p-dropdown-trigger') // Encontra o botão de abrir\n.click();\n// Aguarda 2 segundos para garantir que o dropdown esteja completamente aberto\ncy.wait(2000);\n// Seleciona a 2ª opção: \"CIF - Por conta do Emitente (Fornecedor)\"\ncy.get('span.ng-star-inserted').contains('CIF - Por conta do Emitente (Fornecedor)').click({\n  force: true\n});\n// Rola a tela para o topo\ncy.scrollTo('top');\n// Parcelamento\n// Digita o código 1 no campo de Parcelamento (forçando se necessário)\ncy.get('input[placeholder=\"Pesquise por cód. ou descrição\"]').should('be.visible') // Garante que o campo está visível\n.first() // Garante que está pegando apenas o primeiro visível\n.type('1', {\n  force: true\n}); // Força o preenchimento, se necessário\n// Aguarda a lista carregar\ncy.wait(1000); // Você pode ajustar esse tempo ou usar interceptação se preferir\n// Aguarda a opção \"1- A VISTA\" aparecer (até 5s)\ncy.contains('A VISTA', {\n  timeout: 5000\n}).should('be.visible').click({\n  force: true\n}); // Seleciona a opção\n// Rola a tela para o topo\ncy.scrollTo('top');\n// Local de Estoque\n// Clica no campo de Local de Estoque para garantir que ele esteja ativo\ncy.contains('Local de estoque') // Localiza o label \"Local de estoque\"\n.parent() // Sobe para o contêiner do campo de input\n.find('input[placeholder=\"Pesquise por cód. ou descrição\"]') // Encontra o campo de input\n.click(); // Clica no campo para ativá-lo\n// Digita o código 1 no campo de Local de Estoque\ncy.contains('Local de estoque') // Localiza novamente o label \"Local de estoque\"\n.parent() // Sobe para o contêiner\n.find('input[placeholder=\"Pesquise por cód. ou descrição\"]') // Encontra o campo de input\n.type('1', {\n  force: true\n}); // Força o preenchimento, se necessário\n// Aguarda a lista carregar\ncy.wait(1000); // Você pode ajustar esse tempo ou usar interceptação se preferir\n// Aguarda a opção \"ESTOQUE REVENDA\" aparecer (até 5s)\ncy.contains('ESTOQUE REVENDA', {\n  timeout: 5000\n}).should('be.visible').click({\n  force: true\n}); // Seleciona a opção\n// Rola a tela para o topo\ncy.scrollTo('top');\n// Local de Retirada - Busca e interage com o campo\ncy.get('input[placeholder=\"Pesquise por cód. ou endereço\"]').scrollIntoView() // Rola para o campo, se necessário\n.should('be.visible') // Garante que o campo está visível\n.click({\n  force: true\n}) // Clica no campo\n.type('20', {\n  force: true\n}); // Digita o valor\n// Rola a tela para o topo\ncy.scrollTo('top');\n// Aguarda a lista carregar\ncy.wait(1000);\n// Aguarda a opção \"AL TOCANTINS\" aparecer (até 5s)\ncy.contains('AL TOCANTINS', {\n  timeout: 5000\n}).should('be.visible').click({\n  force: true\n}); // Seleciona a opção\n// Rola a tela para o topo\ncy.scrollTo('top');\n// Pessoa da Retirada - Busca e interage com o campo\ncy.get('label') // Localiza o label \"Pessoa da retirada\"\n.contains('Pessoa da retirada') // Garante que é o campo correto\n.parent() // Sobe até o contêiner do campo\n.find('input[aria-autocomplete=\"list\"]') // Localiza o campo de input dentro do contêiner\n.scrollIntoView() // Rola até o campo, se necessário\n.should('be.visible') // Garante que o campo está visível\n.click({\n  force: true\n}) // Clica no campo para ativá-lo\n.type('1', {\n  force: true\n}); // Digita o código \"1\" no campo\n// Rola a tela para o topo\ncy.scrollTo('top');\n// Aguarda a lista carregar\ncy.wait(1000); // Você pode ajustar o tempo ou usar interceptação de requisição se necessário\n// Aguarda a opção \"PESSOA - SEM VALOR FISCAL 4\" aparecer (até 5s)\ncy.contains('PESSOA - SEM VALOR FISCAL 4', {\n  timeout: 5000\n}).should('be.visible').click({\n  force: true\n}); // Seleciona a opção correta\n// Rola a tela para o topo\ncy.scrollTo('top');\n// Placa - Busca e interage com o campo\ncy.get('label') // Localiza o label \"Placa\"\n.contains('Placa') // Garante que é o campo correto\n.parent() // Sobe até o contêiner do campo\n.find('input[aria-autocomplete=\"list\"]') // Localiza o campo de input dentro do contêiner\n.scrollIntoView() // Rola até o campo, se necessário\n.should('be.visible') // Garante que o campo está visível\n.click({\n  force: true\n}) // Clica no campo para ativá-lo\n.type('OUV2176', {\n  force: true\n}); // Digita a placa \"OUV2176\"\n// Rola a tela para o topo\ncy.scrollTo('top');\n// Aguarda a lista carregar\ncy.wait(1000); // Você pode ajustar o tempo ou usar interceptação de requisição se necessário\n// Aguarda a opção \"OUV2176\" aparecer (até 5s)\ncy.contains('OUV2176', {\n  timeout: 5000\n}).should('be.visible').click({\n  force: true\n}); // Seleciona a placa correta\n// Rola a tela para o topo\ncy.scrollTo('top');\n// Adicionar Item - Clica no botão \"Adicionar item\"\ncy.get('button').contains('Adicionar item') // Garante que o botão contém o texto \"Adicionar item\"\n.should('be.visible') // Garante que o botão esteja visível\n.click(); // Clica no botão\n// Localiza a coluna \"Item\" e clica para garantir a ordenação, caso necessário\ncy.contains('Item') // Localiza a coluna \"Item\"\n.parent() // Sobe até o cabeçalho da tabela\n.click(); // Garante que a coluna de itens seja clicada (para ordenação)\ncy.get('td') // Localiza todas as células da tabela\n.contains('10000') // Encontra a célula que contém o código \"10000\"\n.click(); // Clica na célula com o código 10000\n// Localiza o botão \"Adicionar\" específico e clica nele\ncy.get('button.mat-button') // Localiza o botão com a classe 'mat-button'\n.contains('Adicionar') // Garante que o texto do botão seja \"Adicionar\"\n.click({\n  force: true\n}); // Clica no botão\n// Rola a tela para baixo\ncy.scrollTo('bottom');\n// Localiza o campo Quantidade e preenche com o valor 100,00\ncy.get('input[name=\"quantidade\"]') // Localiza o campo de input \"quantidade\" pelo nome\n.should('be.visible') // Garante que o campo está visível\n.click({\n  force: true\n}) // Clica no campo para ativá-lo\n.type('100,00', {\n  force: true\n}); // Digita o valor 100,00\n// Avançar para a Detalhes  \n// Aguarda a tela de itens carregar completamente\ncy.wait(1000); // Ajuste o tempo conforme necessário\n// Localiza e clica em todos os botões \"Avançar\"\ncy.get('button.btn.btn-secondary.m-l-10.btn-square.ripple.light').should('be.visible').click({\n  force: true,\n  multiple: true\n});\n// Aguarda 2 segundos antes de clicar no botão \"Avançar\"\ncy.wait(2000);\n// Localiza e clica em todos os botões \"Avançar\" na tela de detalhes\ncy.get('button.btn.btn-secondary.m-l-10.btn-square.ripple.light').should('be.visible').click({\n  force: true,\n  multiple: true\n});\n// Tela de Confirmação\n// Aguarda 2 segundos antes de clicar no botão \"Salvar\"\ncy.wait(2000);\n// Localiza e clica no botão \"Salvar\" na tela de confirmação\ncy.get('button.btn.btn-secondary.m-r-5.ripple.light').should('be.visible').click({\n  force: true\n});\n// Aguarda 5 segundos antes de clicar no botão \"Não\"\ncy.wait(5000);\n// Localiza e clica no botão \"Não\" na tela de confirmação\ncy.get('button.swal2-cancel.swal2-styled').should('be.visible').click({\n  force: true\n});",
+              "err": {},
+              "uuid": "51f34772-c33a-42a6-8cce-19637275ecc6",
+              "parentUUID": "ad5a0046-104e-42ee-a256-a78d07021f48",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [
+            "51f34772-c33a-42a6-8cce-19637275ecc6"
+          ],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 47490,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 2000
+    }
+  ],
+  "meta": {
+    "mocha": {
+      "version": "7.0.1"
+    },
+    "mochawesome": {
+      "options": {
+        "quiet": false,
+        "reportFilename": "mochawesome",
+        "saveHtml": false,
+        "saveJson": true,
+        "consoleReporter": "spec",
+        "useInlineDiffs": false,
+        "code": true
+      },
+      "version": "7.1.3"
+    },
+    "marge": {
+      "options": {
+        "reportDir": "cypress/reports",
+        "overwrite": false,
+        "html": false,
+        "json": true
+      },
+      "version": "6.2.0"
+    }
+  }
+}
