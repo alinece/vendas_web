@@ -24,7 +24,7 @@ async function sendSummaryToDiscord() {
       content: '📊 Resumo dos Testes Cypress:',
       embeds: [
         {
-          title: 'Relatório de Testes - Cypress',
+          title: 'Relatório de Testes - Vendas Web',
           description: `Aqui está o resumo dos testes executados.`,
           fields: [
             {
